@@ -16,7 +16,7 @@ var app = app || {};
 
 	var ENTER_KEY = 13;
 
-	var TodoApp = React.createClass({
+	var TodoApp = React.createClass({displayName: "TodoApp",
 		getInitialState: function () {
 			return {
 				nowShowing: app.ALL_TODOS,
@@ -101,16 +101,16 @@ var app = app || {};
 
 			var todoItems = shownTodos.map(function (todo) {
 				return (
-					<TodoItem
-						key={todo.id}
-						todo={todo}
-						onToggle={this.toggle.bind(this, todo)}
-						onDestroy={this.destroy.bind(this, todo)}
-						onEdit={this.edit.bind(this, todo)}
-						editing={this.state.editing === todo.id}
-						onSave={this.save.bind(this, todo)}
-						onCancel={this.cancel}
-					/>
+					React.createElement(TodoItem, {
+						key: todo.id, 
+						todo: todo, 
+						onToggle: this.toggle.bind(this, todo), 
+						onDestroy: this.destroy.bind(this, todo), 
+						onEdit: this.edit.bind(this, todo), 
+						editing: this.state.editing === todo.id, 
+						onSave: this.save.bind(this, todo), 
+						onCancel: this.cancel}
+					)
 				);
 			}, this);
 
@@ -122,45 +122,45 @@ var app = app || {};
 
 			if (activeTodoCount || completedCount) {
 				footer =
-					<TodoFooter
-						count={activeTodoCount}
-						completedCount={completedCount}
-						nowShowing={this.state.nowShowing}
-						onClearCompleted={this.clearCompleted}
-					/>;
+					React.createElement(TodoFooter, {
+						count: activeTodoCount, 
+						completedCount: completedCount, 
+						nowShowing: this.state.nowShowing, 
+						onClearCompleted: this.clearCompleted}
+					);
 			}
 
 			if (todos.length) {
 				main = (
-					<section id="main">
-						<input
-							id="toggle-all"
-							type="checkbox"
-							onChange={this.toggleAll}
-							checked={activeTodoCount === 0}
-						/>
-						<ul id="todo-list">
-							{todoItems}
-						</ul>
-					</section>
+					React.createElement("section", {id: "main"}, 
+						React.createElement("input", {
+							id: "toggle-all", 
+							type: "checkbox", 
+							onChange: this.toggleAll, 
+							checked: activeTodoCount === 0}
+						), 
+						React.createElement("ul", {id: "todo-list"}, 
+							todoItems
+						)
+					)
 				);
 			}
 
 			return (
-				<div>
-					<header id="header">
-						<h1>todos</h1>
-						<input
-							ref="newField"
-							id="new-todo"
-							placeholder="What needs to be done?"
-							onKeyDown={this.handleNewTodoKeyDown}
-							autoFocus={true}
-						/>
-					</header>
-					{main}
-					{footer}
-				</div>
+				React.createElement("div", null, 
+					React.createElement("header", {id: "header"}, 
+						React.createElement("h1", null, "todos"), 
+						React.createElement("input", {
+							ref: "newField", 
+							id: "new-todo", 
+							placeholder: "What needs to be done?", 
+							onKeyDown: this.handleNewTodoKeyDown, 
+							autoFocus: true}
+						)
+					), 
+					main, 
+					footer
+				)
 			);
 		}
 	});
@@ -169,7 +169,7 @@ var app = app || {};
 
 	function render() {
 		React.render(
-			<TodoApp model={model}/>,
+			React.createElement(TodoApp, {model: model}),
 			document.getElementById('todoapp')
 		);
 	}
